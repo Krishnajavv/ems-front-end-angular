@@ -1,0 +1,73 @@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 bg-dark d-flex flex-column " style="min-height: 90vh;width: fit-content;">
+            <a style="text-decoration: none; color: antiquewhite;" class="fw-bolder mb-3 mt-3 " href="" routerLink="/dashboard">HOME</a>
+            <br>
+            <a style="text-decoration: none; color: antiquewhite;" class="fw-bolder mb-3  " href="" routerLink="/users">USERS</a>
+            <button class="btn mt-auto text-light fw-bolder">
+                <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i>Logout</button>
+        </div>
+
+        <div class="col-lg-10">
+            <div class="d-flex justify-content-between">
+            <h1> All User List</h1>
+            <a href="" class="btn btn-dark d-grid mt-3" routerLink="/users/add"><i class="fa-solid fa-user-plus"></i>Add</a>
+        </div>
+
+        <div class="d-flex align-items-center m-3">
+            <span>Search:{{searchKey}}</span>
+            <input [(ngModel)]="searchKey" type="text" placeholder="Search by Username" class="form-control w-25 ms-2">
+            <div class="dropdown ms-4">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><button (click)="sortById()" class="dropdown-item">Sort By Id</button></li>
+                    <li><button (click)="sortByName()" class="dropdown-item">Sort By Username</button></li>
+                </ul>
+            </div>
+            <button (click)="generatePDF()" class="btn btn-primary ms-auto">Export</button>
+        </div>
+
+
+        <table class="table shadow mt-5 ms-3">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of allUsers |search:searchKey|paginate: { itemsPerPage: 4, currentPage: p }
+
+                ; let i=index;"[hidden]="!user.empId">
+                    <td>{{i}}</td>
+                    <td>{{user.empId}}</td>
+                    <td>{{user.name}}</td>
+                    <td>{{user.email}}</td>
+                    <td><span [ngClass]="user.status=='1'?'btn btn-success':'btn btn-warning'" >{{user.status=='1'?'Active':'Inactive'}}</span></td>
+                    <td>
+                        <a href="" style="text-decoration: none;color: beige;"
+                        class="fw-bolder p-2" routerLink="/users/edit/{{user.id}}"><i class="fa-solid fa-pen-to-square text-danger"></i>
+                         </a>
+                         <button (click)="deleteUser(user.id)" class="btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+                <tr
+                     *ngIf="(allUsers|search:searchKey).length==0">
+                     <p class="text-danger fw-bolder">User Not Found</p>
+                </tr>
+            </tbody>
+
+        </table>
+        <div class="d-flex justify-content-center">
+            <pagination-controls (pageChange)="p = $event"></pagination-controls>
+        </div>
+        </div>
+    </div>
+</div>
